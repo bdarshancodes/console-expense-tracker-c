@@ -1,0 +1,126 @@
+#include<stdio.h>
+#include<string.h>
+
+
+typedef struct expense
+
+{
+    char reason[200];
+    float amount;
+}ex;
+
+
+
+void addexpense(ex expenses[],int*count);
+void viewexpenses();
+void totalexpense(ex expenses[],int*count);
+   
+
+int main(){
+    int choice;
+    int count=0;
+    ex expenses[200];
+    
+    do{
+    printf("Hello!\n");
+    printf("------Expense Tracker by bdarshancodes------\n");
+    printf("-----Menu-----\n");
+    printf("--1.Add Expense--\n");
+    printf("--2.View expenses--\n");
+    printf("--3.View Total Expenses--\n");
+    printf("--4.Exit--\n");
+    printf("Enter your prefer choice between (1-4)\n");
+    scanf("%d",&choice);
+    switch (choice)
+    {
+    case 1:
+    addexpense(expenses,&count);
+        break;
+    case 2:
+    viewexpenses();
+        break;
+    case 3:
+    totalexpense(expenses,&count);
+        break;
+    case 4:
+     printf("--Exiting Menu--\n");
+     printf("Exited successfully\n");
+     printf("Good Bye:)");
+        break;
+    
+    default:
+    printf("Please enter valid choice(1-4)\n");
+         break;
+    }
+    }while (choice!=4);
+
+
+
+
+
+
+    
+
+
+    return 0;
+}
+void addexpense(ex expenses[],int*count)
+    {
+        FILE* fptr=fopen("expenses.txt","a");
+        if(fptr==NULL){
+        printf("File does not exist.\n");
+        return;
+        }
+
+        printf("-----Add Expense-----\n");
+        printf("Enter reason for expense...\n");
+        scanf(" %[^\n]",expenses[*count].reason);
+        printf("Enter Expense amount..\n");
+        scanf("%f",&expenses[*count].amount);
+        fprintf(fptr,"Reason--> %s  spent Amount---> %f\n",expenses[*count].reason,expenses[*count].amount);
+        fclose(fptr);
+        (*count)++;
+        printf("-----Expense added sucessfully-----\n");
+    
+
+    }  
+
+
+
+    void viewexpenses(){
+        FILE*fptr=fopen("expenses.txt","r");
+        if(fptr==NULL){
+            printf("Error! no any data found\n");
+        }else{
+            char ch;
+            printf("----View Expenses----\n");
+            printf("-------------------------\n");
+            while ((ch=fgetc(fptr))!=EOF)
+            {
+                putchar(ch);
+               
+               
+            }
+             fclose(fptr);
+    
+    }
+}
+
+    void totalexpense(ex expenses[],int*count){
+        FILE*fptr=fopen("expenses.txt","r");
+        if(fptr==NULL){
+            printf("No any entry for calculate\n");
+            return;
+        }else{
+            char reason[200];
+            float total=0;
+            float amount;
+            while(fscanf(fptr,"Reason--> %[ ^\n]  spent Amount---> %f",reason,&amount)!=EOF){
+                total+=amount;
+            }
+            fclose(fptr);
+            printf("Total Expenses: ₹%.2f\n", total);
+
+        }
+        
+    }
